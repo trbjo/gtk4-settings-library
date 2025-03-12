@@ -1,13 +1,9 @@
-@define-color alternative_border alpha(@border_color, 0.5);
+@define-color alternative_border alpha(@borders, 0.5);
 @define-color transparent_base alpha(@theme_base_color, 0.85);
 @define-color slightly_muted mix(@theme_base_color, @theme_bg_color, 0.25);
 
 window#settings  {
     background: @slightly_muted;
-}
-window#settings .content-box {
-/*    padding: 30px 100px;*/
-/*    min-width: 450px;*/
 }
 
 window#settings .content-box frame {
@@ -24,12 +20,23 @@ box.section {
 .section {
     background: green;
 }
+window#settings .content-box box.section:first-child:last-child {
+    border-radius: 12px 12px 12px 12px;
+}
+window#settings .content-box box.section:first-child {
+    margin-top: 20px;
+    border-radius: 12px 12px 0 0;
+}
+window#settings .content-box box.section:last-child {
+    border-radius: 0 0 12px 12px;
+    margin-bottom: 20px;
+}
 window#settings .content-box box.section {
     background: @theme_base_color;
-    border-radius: 12px;
+    border-radius: 0;
 }
 
-window#settings .content-box label.heading {
+window#settings .content-box .section label.heading {
     margin-left: 0;
     margin-bottom: 8px;
     margin-top: 14px;

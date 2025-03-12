@@ -92,16 +92,24 @@ public class SettingsWidgetFactory : GLib.Object {
     }
 
     private Gtk.Widget create_double_widget(GLib.Settings settings, SchemaParser.SchemaKey key) {
+        double current_value = settings.get_double(key.name);
         var scale = new Gtk.Scale(Gtk.Orientation.HORIZONTAL, null);
-        if (key.range != null && key.range.get_type_string() == "(dd)") {
-            Variant min_var, max_var;
-            key.range.get("(dd)", out min_var, out max_var);
-            scale.set_range(min_var.get_double(), max_var.get_double());
-        } else {
-            scale.set_range(0, 10);
+
+        if (key.range.get_type_string() == "(sv)") {
+            string range_type;
+            Variant range_value;
+            key.range.get("(sv)", out range_type, out range_value);
+
+            if (range_type == "range") {
+                double min_value, max_value;
+                range_value.get("(dd)", out min_value, out max_value);
+                scale.set_range(min_value, max_value);
+            }
         }
-        scale.set_digits(2);
+
+        scale.set_value(current_value);
         scale.set_draw_value(true);
+        scale.set_digits(2);
         settings.bind(key.name, scale.adjustment, "value", SettingsBindFlags.DEFAULT);
         return scale;
     }
@@ -223,7 +231,7 @@ public class SettingsWidgetFactory : GLib.Object {
     private Gtk.Widget create_color_widget(GLib.Settings settings, SchemaParser.SchemaKey key) {
         var dialog = new Gtk.ColorDialog();
         dialog.set_title("Choose Color");
-        dialog.set_with_alpha(false);
+        dialog.set_with_alpha(true);
         dialog.set_modal(true);
 
         var button = new Gtk.ColorDialogButton(dialog);

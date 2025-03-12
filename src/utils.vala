@@ -1,5 +1,4 @@
 namespace SettingsUtils {
-
     // TODO: Remove when merged
     // https://gitlab.gnome.org/GNOME/vala/-/merge_requests/312/
     [CCode (cname = "gtk_style_context_add_provider_for_display")]

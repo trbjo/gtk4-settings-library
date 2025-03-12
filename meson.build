@@ -1,5 +1,5 @@
 project('settings', 'vala', 'c')
-project_name = 'io.github.trbjo.vala-libraries.settings'
+project_name = 'io.github.trbjo.bob.settings'
 
 proj_deps = {
     'gtk4': dependency('gtk4-wayland', version: '>= 4.0.0'),

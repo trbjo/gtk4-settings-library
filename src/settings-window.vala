@@ -1,7 +1,6 @@
 public class SettingsWindow : Gtk.Window {
     private SettingsWidgetFactory widget_factory;
     private static Gtk.CssProvider css_provider;
-    public string title { get; construct; }
 
     private Gtk.Box content_box;
     private Breadcrumbs breadcrumbs;
@@ -27,6 +26,12 @@ public class SettingsWindow : Gtk.Window {
                 }
             });
         }
+
+        protected override void dispose() {
+            iterate_children(get_first_child(), (child) => child.unparent());
+            base.dispose();
+        }
+
     }
 
     public delegate void ChildIterator(Gtk.Widget widget);
@@ -75,7 +80,6 @@ public class SettingsWindow : Gtk.Window {
         click.set_button(0);
         click.pressed.connect((n_press, x, y) => {
             unowned Gtk.Widget? picked_widget = content_box.pick(x, y, Gtk.PickFlags.DEFAULT);
-            message("picked_widget: %s", picked_widget.get_name());
             if (picked_widget != null && picked_widget.has_css_class("section")) {
                 foreach (var cls in picked_widget.get_css_classes()) {
                     if (cls != "section") {
@@ -96,7 +100,6 @@ public class SettingsWindow : Gtk.Window {
     }
 
     private void setup_content(string schema_id) {
-        message("setup_content: %s", schema_id);
         iterate_children(content_box.get_first_child(), (child) => child.unparent());
         var schema_parser = new SchemaParser(schema_id);
         var schema_settings = new GLib.Settings(schema_id);
@@ -160,9 +163,6 @@ public class SettingsWindow : Gtk.Window {
             } else {
                 multiple_setup(subsection, section_settings);
             }
-
-            // if (section_settings.get_child(subsection.display_name).list_children().length > 0) {
-
         }
     }
 
